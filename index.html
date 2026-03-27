@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yewande & Olaoluwa - Wedding Celebration</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Envelope Animation -->
+    <div id="envelope-wrapper">
+        <div class="envelope-container">
+            <div class="envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-body">
+                    <div class="wax-seal">
+                        <span class="monogram">Y&O</span>
+                    </div>
+                </div>
+            </div>
+            <p class="tap-hint">Tap to open</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" style="display: none;">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="#home" class="logo">Y & O</a> 
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-menu" id="navMenu">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#schedule" class="nav-link">Schedule</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-pattern">
+                <div class="pattern-circle"></div>
+                <div class="pattern-circle"></div>
+                <div class="pattern-circle"></div>
+            </div>
+            <div id="home" class="hero-content">
+                <div class="hero-text">
+                    <span class="hero-pre-title">The Wedding of</span>
+                    <h1 class="hero-title">Yewande <span class="ampersand">&</span> Olaoluwa</h1>
+                    <div class="divider">
+                    </div>
+                    <p class="hero-subtitle">We can't wait to share our special day with all of you.</p>
+                    <p class="hero-date">Sunday, April 5th, 2026</p>
+                </div>
+                <a href="rsvp.html" class="cta-button">RSVP Now</a>
+            </div>
+        </section>
+
+        <section id="schedule" class="schedule-section">
+            <div class="section-wrapper">
+                <h2 class="section-title">Our Wedding Day</h2>
+                <div class="divider-center">
+                </div>
+
+                <div class="wedding-event-container">
+                    <div class="wedding-event-card">
+                        <div class="event-header">
+                            <div class="event-icon">
+                                <span class="icon-ring">💍</span>
+                            </div>
+                            <h3 class="event-title">The Wedding Ceremony</h3>
+                            <div class="time-badge">12:00 PM</div>
+                        </div>
+
+                        <div class="event-details">
+                            <div class="detail-item">
+                                <span class="detail-icon">📅</span>
+                                <div>
+                                    <p class="detail-label">Date</p>
+                                    <p class="detail-value">Sunday, April 5th, 2026</p>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-icon">⏰</span>
+                                <div>
+                                    <p class="detail-label">Time</p>
+                                    <p class="detail-value">12:00 PM</p>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-icon">📍</span>
+                                <div>
+                                    <p class="detail-label">Location</p>
+                                    <p class="detail-value">PE2 8FD, United Kingdom</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-buttons">
+                            <button class="event-btn add-to-calendar-btn" onclick="addToCalendar()">
+                                <span class="btn-icon">📅</span>
+                                <span>Add to Calendar</span>
+                            </button>
+                            <button class="event-btn get-directions-btn" onclick="getDirections()">
+                                <span class="btn-icon">🗺️</span>
+                                <span>Get Directions</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="section-wrapper">
+                <h2 class="section-title">Questions?</h2>
+                <div class="divider-center">
+                </div>
+
+                <div class="contact-content">
+                    <div class="contact-card">
+                        <div class="contact-card-inner">
+                            <div class="contact-icon">👰</div>
+                            <h3>Bride's Brother</h3>
+                            <p class="contact-name"></p>
+                            <a href="tel:+2349053550765" class="contact-phone">
+                                <span class="phone-icon">📞</span>
+                                +234 905 355 0765
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-inner">
+                            <div class="contact-icon">🤵</div>
+                            <h3>Groom's Brother</h3>
+                            <p class="contact-name"></p>
+                            <a href="tel:+2347085621883" class="contact-phone">
+                                <span class="phone-icon">📞</span>
+                                +234 708 562 1883
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-pattern">
+                <div class="pattern-line"></div>
+                <div class="pattern-line"></div>
+            </div>
+            <h2>Ready to Celebrate With Us?</h2>
+            <p>Your presence means the world to us. Please confirm your attendance.</p>
+            <a href="rsvp.html" class="cta-button-large">RSVP Here</a>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2026 Yewande & Olaoluwa. All rights reserved.</p>
+                <p class="footer-heart">Made with <span class="heart">❤</span> for our special day</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

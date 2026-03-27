@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSVP - Yewande & Olaoluwa's Wedding</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="rsvp-page">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Y & O</a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="index.html#schedule" class="nav-link">Schedule</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="rsvp-hero">
+        <div class="rsvp-hero-pattern">
+            <div class="pattern-dot"></div>
+            <div class="pattern-dot"></div>
+            <div class="pattern-dot"></div>
+        </div>
+        <div class="rsvp-hero-content">
+            <span class="hero-pre-title">We Can't Wait to See You</span>
+            <h1>Celebrate with Us!</h1>
+            <p>Please let us know if you'll be joining us</p>
+        </div>
+    </section>
+
+    <section class="rsvp-container">
+        <div class="rsvp-wrapper">
+            <div class="rsvp-left">
+                <div class="rsvp-info">
+                    <h2>Wedding Details</h2>
+                    <div class="info-item">
+                        <span class="info-icon">📅</span>
+                        <div>
+                            <h4>Date</h4>
+                            <p>Sunday, April 5, 2026</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">⏰</span>
+                        <div>
+                            <h4>Time</h4>
+                            <p>12:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon">📍</span>
+                        <div>
+                            <h4>Location</h4>
+                            <p class="detail-value">PE2 8FD, United Kingdom</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rsvp-decorative">
+                    <div class="decoration-element">✦</div>
+                    <p>"Love recognizes no barriers. It jumps hurdles, leaps fences, penetrates walls to arrive at its destination full of hope."</p>
+                    <p class="quote-author">— Maya Angelou</p>
+                    <div class="decoration-element">✦</div>
+                </div>
+            </div>
+
+            <div class="rsvp-right">
+                <div class="rsvp-form-container">
+                    <h2>RSVP Form</h2>
+                    <p class="form-subtitle">Please confirm your attendance by March 15th, 2026</p>
+
+                    <form id="rsvpForm" class="rsvp-form">
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Your Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" placeholder="+44 xxx xxx xxxx" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Attendance Status *</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="attending" name="attendance" value="Attending" required>
+                                    <label for="attending" class="radio-label">I'm attending</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="notAttending" name="attendance" value="Not Attending" required>
+                                    <label for="notAttending" class="radio-label">I'm not attending</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="guestCountGroup" style="display: none;">
+                            <label class="form-label">Will you bring a Plus One? *</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="plus1Yes" name="plusOne" value="Yes">
+                                    <label for="plus1Yes" class="radio-label">Yes, I'll bring someone</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="plus1No" name="plusOne" value="No">
+                                    <label for="plus1No" class="radio-label">No, I'll come alone</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" class="form-label">Special Message for Us</label>
+                            <textarea id="message" name="message" placeholder="Share your thoughts or wishes" rows="4"></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <span>Send my RSVP</span>
+                            <span class="submit-icon">→</span>
+                        </button>
+                    </form>
+
+                    <div id="successMessage" class="success-message" style="display: none;">
+                        <div class="success-icon">✓</div>
+                        <h3>Thank You!</h3>
+                        <p>Your RSVP has been submitted successfully.</p>
+                        <p>A confirmation email will be sent to you shortly.</p>
+                        <a href="index.html" class="back-home-btn">Return to Homepage</a>
+                    </div>
+
+                    <p class="form-note">We respect your privacy and will only use this information for wedding planning.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Yewande & Olaoluwa. All rights reserved.</p>
+            <p class="footer-heart">With love and gratitude</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
