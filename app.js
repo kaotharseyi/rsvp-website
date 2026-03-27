@@ -263,8 +263,7 @@ END:VCALENDAR`;
             }
         });
     });
-});
-// TEST HAMBURGER MENU
+    // TEST HAMBURGER MENU
 console.log('Testing hamburger menu...');
 const testHamburger = document.getElementById('hamburger');
 const testMenu = document.getElementById('navMenu');
@@ -284,3 +283,4 @@ if (testHamburger && testMenu) {
 } else {
     console.log('Elements not found! Check IDs in HTML');
 }
+});
