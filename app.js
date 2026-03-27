@@ -1,5 +1,4 @@
 // ===================== ENVELOPE ANIMATION =====================
-// ===================== ENVELOPE ANIMATION =====================
 document.addEventListener('DOMContentLoaded', function() {
     const envelopeWrapper = document.getElementById('envelope-wrapper');
     const mainContent = document.getElementById('main-content');
@@ -49,24 +48,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
-    // ===================== NAVIGATION & HAMBURGER MENU =====================
+    // ===================== HAMBURGER MENU =====================
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
     const navLinks = document.querySelectorAll('.nav-link');
 
     if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
+        // Toggle menu when clicking hamburger
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
             navMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
         });
 
         // Close menu when clicking a link
         navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
+            link.addEventListener('click', function() {
                 navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
             });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
         });
     }
 
@@ -80,28 +88,24 @@ document.addEventListener('DOMContentLoaded', function() {
             end: '2026-04-05T18:00:00'
         };
 
-        // Create Google Calendar URL
         const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}&dates=${event.start.replace(/[-:]/g, '').replace('T', 'T')}/${event.end.replace(/[-:]/g, '').replace('T', 'T')}`;
         
-        // Create iCal data for download (as fallback)
-                    const icalData = `BEGIN:VCALENDAR
-            VERSION:2.0
-            PRODID:-//Y&O Wedding//EN
-            BEGIN:VEVENT
-            UID:${Date.now()}@yandowedding.com
-            DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-            DTSTART:20260405T120000Z
-            DTEND:20260405T180000Z
-            SUMMARY:${event.title}
-            DESCRIPTION:${event.description}
-            LOCATION:${event.location}
-            END:VEVENT
-            END:VCALENDAR`;
+        const icalData = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Y&O Wedding//EN
+BEGIN:VEVENT
+UID:${Date.now()}@yandowedding.com
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:20260405T120000Z
+DTEND:20260405T180000Z
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+END:VEVENT
+END:VCALENDAR`;
 
-        // Try to open Google Calendar in a new window
         const googleWindow = window.open(googleCalendarUrl, '_blank');
         
-        // If popup blocked, offer download
         if (!googleWindow || googleWindow.closed || typeof googleWindow.closed === 'undefined') {
             const blob = new Blob([icalData], { type: 'text/calendar' });
             const link = document.createElement('a');
@@ -120,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.open(mapsUrl, '_blank');
     };
 
-    // ===================== RSVP FORM WITH APPS SCRIPT INTEGRATION =====================
+    // ===================== RSVP FORM =====================
     const rsvpForm = document.getElementById('rsvpForm');
     
     if (rsvpForm) {
@@ -128,14 +132,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const guestCountGroup = document.getElementById('guestCountGroup');
         const plusOneRadios = document.querySelectorAll('input[name="plusOne"]');
         
-        // Show/hide plus one fields based on attendance selection
         attendingRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.value === 'Attending') {
                     guestCountGroup.style.display = 'block';
                     plusOneRadios.forEach(radio => {
                         radio.required = true;
-                        radio.parentElement.style.animation = 'fadeIn 0.5s ease';
                     });
                 } else {
                     guestCountGroup.style.display = 'none';
@@ -147,13 +149,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Form submission with Apps Script
         rsvpForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             
-            // Get form values
             const formData = {
                 fullName: document.getElementById('fullName').value.trim(),
                 email: document.getElementById('email').value.trim(),
@@ -163,57 +163,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 message: document.getElementById('message').value.trim() || 'No message'
             };
 
-            // Validate required fields
             if (!formData.fullName || !formData.email || !formData.phone || !formData.attendance) {
                 alert('Please fill in all required fields');
                 return;
             }
 
-            // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
                 alert('Please enter a valid email address');
                 return;
             }
 
-            // Validate phone number (basic)
             if (formData.phone.length < 10) {
                 alert('Please enter a valid phone number');
                 return;
             }
 
-            // If attending, validate plus one selection
             if (formData.attendance === 'Attending' && !formData.plusOne) {
                 alert('Please indicate if you\'ll bring a plus one');
                 return;
             }
 
-            // Disable submit button
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span>Sending...</span>';
 
             try {
-                // YOUR GOOGLE APPS SCRIPT WEB APP URL
-                // Replace this with your actual Apps Script URL
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOHjuRZYxj0diGF2FEf2oh9fefAgwCEKu_CeVMMpaL5NWMNdqnYSbX_HIxvbNPeO6rXg/exec';
                 
-                // Send data to Apps Script
-                const response = await fetch(APPS_SCRIPT_URL, {
+                await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // This prevents CORS issues
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
-                // Hide form and show success message
                 rsvpForm.style.display = 'none';
                 const successMessage = document.getElementById('successMessage');
                 if (successMessage) {
                     successMessage.style.display = 'block';
                     
-                    // Customize success message based on attendance
                     const messageTitle = successMessage.querySelector('h3');
                     const messageText = successMessage.querySelector('p');
                     
@@ -232,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('RSVP submission error:', error);
                 alert('There was an error submitting your RSVP. Please try again or contact us directly.');
                 
-                // Re-enable submit button
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>Submit RSVP</span><span class="submit-icon">→</span>';
             }
@@ -254,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
 
-    // Observe elements for scroll animation
     document.querySelectorAll('.wedding-event-card, .contact-card, .rsvp-form-container').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
@@ -264,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===================== SMOOTH SCROLL FOR NAVIGATION =====================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
@@ -275,58 +263,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // ===================== SMOOTH SCROLL FOR NAVIGATION =====================
-document.querySelectorAll('.nav-link').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href && href.startsWith('#')) {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
-    });
 });
-});
-// ===================== HAMBURGER MENU FIX =====================
-const hamburgerBtn = document.getElementById('hamburger');
-const menuPanel = document.getElementById('navMenu');
-
-if (hamburgerBtn && menuPanel) {
-    // Close menu function
-    function closeMenu() {
-        menuPanel.classList.remove('active');
-        hamburgerBtn.classList.remove('active');
-    }
-    
-    // Open/close when clicking hamburger
-    hamburgerBtn.onclick = function(e) {
-        e.stopPropagation();
-        if (menuPanel.classList.contains('active')) {
-            closeMenu();
-        } else {
-            menuPanel.classList.add('active');
-            hamburgerBtn.classList.add('active');
-        }
-    };
-    
-    // Close when clicking any nav link
-    const allLinks = document.querySelectorAll('.nav-link');
-    allLinks.forEach(function(link) {
-        link.onclick = function() {
-            closeMenu();
-        };
-    });
-    
-    // Close when clicking outside
-    document.onclick = function(e) {
-        if (!menuPanel.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-            closeMenu();
-        }
-    };
-}
