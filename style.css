@@ -243,7 +243,6 @@ body {
 }
 
 .nav-menu {
-    display: flex;
     gap: 3rem;
 }
 
