@@ -54,10 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const navMenu = document.getElementById('navMenu');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // Debug: Check if elements exist
-    console.log('Hamburger element:', hamburger);
-    console.log('NavMenu element:', navMenu);
-
     if (hamburger && navMenu) {
         // Remove any existing event listeners by cloning and replacing (clean slate)
         const newHamburger = hamburger.cloneNode(true);
@@ -73,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Toggle menu when clicking hamburger
         freshHamburger.addEventListener('click', function(event) {
             event.stopPropagation();
-            console.log('Hamburger clicked'); // Debug log
             freshNavMenu.classList.toggle('active');
             freshHamburger.classList.toggle('active');
         });
@@ -95,8 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    } else {
-        console.error('Hamburger or NavMenu not found!');
     }
 
     // ===================== ADD TO CALENDAR FUNCTION =====================
@@ -109,10 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
             end: '2026-04-05T18:00:00'
         };
 
-        // Create Google Calendar URL
         const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}&dates=${event.start.replace(/[-:]/g, '').replace('T', 'T')}/${event.end.replace(/[-:]/g, '').replace('T', 'T')}`;
         
-        // Create iCal data for download (as fallback)
         const icalData = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Y&O Wedding//EN
@@ -127,10 +118,8 @@ LOCATION:${event.location}
 END:VEVENT
 END:VCALENDAR`;
 
-        // Try to open Google Calendar in a new window
         const googleWindow = window.open(googleCalendarUrl, '_blank');
         
-        // If popup blocked, offer download
         if (!googleWindow || googleWindow.closed || typeof googleWindow.closed === 'undefined') {
             const blob = new Blob([icalData], { type: 'text/calendar' });
             const link = document.createElement('a');
@@ -149,7 +138,7 @@ END:VCALENDAR`;
         window.open(mapsUrl, '_blank');
     };
 
-    // ===================== RSVP FORM WITH APPS SCRIPT INTEGRATION =====================
+    // ===================== RSVP FORM =====================
     const rsvpForm = document.getElementById('rsvpForm');
     
     if (rsvpForm) {
@@ -157,14 +146,12 @@ END:VCALENDAR`;
         const guestCountGroup = document.getElementById('guestCountGroup');
         const plusOneRadios = document.querySelectorAll('input[name="plusOne"]');
         
-        // Show/hide plus one fields based on attendance selection
         attendingRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.value === 'Attending') {
                     guestCountGroup.style.display = 'block';
                     plusOneRadios.forEach(radio => {
                         radio.required = true;
-                        radio.parentElement.style.animation = 'fadeIn 0.5s ease';
                     });
                 } else {
                     guestCountGroup.style.display = 'none';
@@ -176,13 +163,11 @@ END:VCALENDAR`;
             });
         });
 
-        // Form submission with Apps Script
         rsvpForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             
-            // Get form values
             const formData = {
                 fullName: document.getElementById('fullName').value.trim(),
                 email: document.getElementById('email').value.trim(),
@@ -192,57 +177,47 @@ END:VCALENDAR`;
                 message: document.getElementById('message').value.trim() || 'No message'
             };
 
-            // Validate required fields
             if (!formData.fullName || !formData.email || !formData.phone || !formData.attendance) {
                 alert('Please fill in all required fields');
                 return;
             }
 
-            // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
                 alert('Please enter a valid email address');
                 return;
             }
 
-            // Validate phone number (basic)
             if (formData.phone.length < 10) {
                 alert('Please enter a valid phone number');
                 return;
             }
 
-            // If attending, validate plus one selection
             if (formData.attendance === 'Attending' && !formData.plusOne) {
                 alert('Please indicate if you\'ll bring a plus one');
                 return;
             }
 
-            // Disable submit button
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span>Sending...</span>';
 
             try {
-                // YOUR GOOGLE APPS SCRIPT WEB APP URL
-                // Replace this with your actual Apps Script URL
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOHjuRZYxj0diGF2FEf2oh9fefAgwCEKu_CeVMMpaL5NWMNdqnYSbX_HIxvbNPeO6rXg/exec';
                 
-                // Send data to Apps Script
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // This prevents CORS issues
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
-                // Hide form and show success message
                 rsvpForm.style.display = 'none';
                 const successMessage = document.getElementById('successMessage');
                 if (successMessage) {
                     successMessage.style.display = 'block';
                     
-                    // Customize success message based on attendance
                     const messageTitle = successMessage.querySelector('h3');
                     const messageText = successMessage.querySelector('p');
                     
@@ -261,7 +236,6 @@ END:VCALENDAR`;
                 console.error('RSVP submission error:', error);
                 alert('There was an error submitting your RSVP. Please try again or contact us directly.');
                 
-                // Re-enable submit button
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>Submit RSVP</span><span class="submit-icon">→</span>';
             }
@@ -283,7 +257,6 @@ END:VCALENDAR`;
         });
     }, observerOptions);
 
-    // Observe elements for scroll animation
     document.querySelectorAll('.wedding-event-card, .contact-card, .rsvp-form-container').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
@@ -306,76 +279,42 @@ END:VCALENDAR`;
     });
 
     // ===================== VIDEO GALLERY MODAL =====================
-function setupVideoGallery() {
-    const videoThumbnails = document.querySelectorAll('.video-thumbnail');
-    const modal = document.getElementById('videoModal');
-    const modalVideo = document.getElementById('modalVideo');
-    const closeModal = document.querySelector('.close-modal');
-    
-    if (!videoThumbnails.length) return;
-    
-    // Function to ensure video plays on mobile
-    function ensureVideoPlays(videoElement) {
-        // For mobile devices, we need to ensure the video has the correct attributes
-        videoElement.setAttribute('playsinline', '');
-        videoElement.setAttribute('webkit-playsinline', '');
+    function setupVideoGallery() {
+        const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+        const modal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        const closeModal = document.querySelector('.close-modal');
+        const navMenu = document.getElementById('navMenu');
+        const hamburger = document.getElementById('hamburger');
         
-        // Load the video
-        videoElement.load();
+        if (!videoThumbnails.length || !modal || !modalVideo) return;
         
-        // Play with a small delay (helps with mobile browsers)
-        setTimeout(() => {
-            const playPromise = videoElement.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.log('Auto-play prevented:', error);
-                    // Show play button if auto-play fails
-                    const controls = videoElement.controls;
-                    if (!controls) {
-                        videoElement.controls = true;
-                    }
-                });
-            }
-        }, 100);
-    }
-    
-    // Add click event to each video thumbnail
-    videoThumbnails.forEach(thumbnail => {
-        thumbnail.addEventListener('click', function() {
-            const videoSrc = this.getAttribute('data-video-src');
+        function openModal(videoSrc) {
+            // Hide nav menu when modal opens
+            if (navMenu) navMenu.classList.remove('active');
+            if (hamburger) hamburger.classList.remove('active');
             
-            if (modal && modalVideo) {
-                // Set the video source
-                modalVideo.src = videoSrc;
-                
-                // Add necessary attributes for mobile
-                modalVideo.setAttribute('playsinline', '');
-                modalVideo.setAttribute('webkit-playsinline', '');
-                modalVideo.setAttribute('controls', 'true');
-                
-                // Show modal
-                modal.style.display = 'flex';
-                
-                // Load and play the video
-                modalVideo.load();
-                
-                // Small delay to ensure modal is visible before playing
-                setTimeout(() => {
-                    const playPromise = modalVideo.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            console.log('Playback failed:', error);
-                            // Video will still show with controls
-                        });
-                    }
-                }, 100);
-            }
-        });
-    });
-    
-    // Close modal when clicking X
-    if (closeModal) {
-        closeModal.addEventListener('click', function() {
+            modalVideo.src = videoSrc;
+            modalVideo.setAttribute('playsinline', '');
+            modalVideo.setAttribute('webkit-playsinline', '');
+            modalVideo.setAttribute('controls', 'true');
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            modalVideo.load();
+            
+            setTimeout(() => {
+                const playPromise = modalVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Playback failed:', error);
+                    });
+                }
+            }, 100);
+        }
+        
+        function closeModalFunc() {
             if (modalVideo) {
                 modalVideo.pause();
                 modalVideo.src = '';
@@ -383,43 +322,173 @@ function setupVideoGallery() {
             if (modal) {
                 modal.style.display = 'none';
             }
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Add click event to each video thumbnail
+        videoThumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                const videoSrc = this.getAttribute('data-video-src');
+                openModal(videoSrc);
+            });
         });
-    }
-    
-    // Close modal when clicking outside the video
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                if (modalVideo) {
-                    modalVideo.pause();
-                    modalVideo.src = '';
+        
+        // Close modal when clicking X button
+        if (closeModal) {
+            closeModal.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeModalFunc();
+            });
+        }
+        
+        // Close modal when clicking outside
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal || e.target.classList.contains('video-modal-content')) {
+                    closeModalFunc();
                 }
-                modal.style.display = 'none';
+            });
+        }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                closeModalFunc();
             }
         });
     }
-}
 
-// Call the function
-setupVideoGallery();
+    setupVideoGallery();
 
-// FIX VIDEO PLAYBACK ON MOBILE 
-function fixMobileVideoPlayback() {
-    const videos = document.querySelectorAll('video');
-    
-    videos.forEach(video => {
-        // Add playsinline attributes for mobile
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-        video.setAttribute('preload', 'metadata');
+    // ===================== IMAGE LIGHTBOX MODAL =====================
+    function setupImageGallery() {
+        const galleryImages = document.querySelectorAll('#galleryGrid img');
         
-        // Ensure controls are visible
-        if (!video.hasAttribute('controls')) {
-            video.setAttribute('controls', 'true');
+        // Create image modal dynamically if it doesn't exist
+        let imageModal = document.getElementById('imageModal');
+        if (!imageModal) {
+            imageModal = document.createElement('div');
+            imageModal.id = 'imageModal';
+            imageModal.className = 'image-modal';
+            imageModal.innerHTML = `
+                <span class="close-image-modal">&times;</span>
+                <img class="modal-image-content" id="modalImage">
+            `;
+            document.body.appendChild(imageModal);
+            
+            // Add styles if not already in CSS
+            imageModal.style.cssText = `
+                display: none;
+                position: fixed;
+                z-index: 9999;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.95);
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            `;
+            
+            const closeBtn = imageModal.querySelector('.close-image-modal');
+            if (closeBtn) {
+                closeBtn.style.cssText = `
+                    position: absolute;
+                    top: 20px;
+                    right: 30px;
+                    color: #fff;
+                    font-size: 40px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    z-index: 10000;
+                    width: 50px;
+                    height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 50%;
+                    transition: all 0.3s ease;
+                `;
+            }
+            
+            const modalImg = imageModal.querySelector('#modalImage');
+            if (modalImg) {
+                modalImg.style.cssText = `
+                    max-width: 90%;
+                    max-height: 80vh;
+                    border-radius: 8px;
+                    object-fit: contain;
+                `;
+            }
         }
-    });
-}
+        
+        const modalImage = document.getElementById('modalImage');
+        const closeImageModal = imageModal.querySelector('.close-image-modal');
+        const navMenu = document.getElementById('navMenu');
+        const hamburger = document.getElementById('hamburger');
+        
+        if (!galleryImages.length || !imageModal || !modalImage) return;
+        
+        function openImageModal(src) {
+            if (navMenu) navMenu.classList.remove('active');
+            if (hamburger) hamburger.classList.remove('active');
+            
+            modalImage.src = src;
+            imageModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeImageModalFunc() {
+            imageModal.style.display = 'none';
+            modalImage.src = '';
+            document.body.style.overflow = 'auto';
+        }
+        
+        galleryImages.forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', function() {
+                openImageModal(this.src);
+            });
+        });
+        
+        if (closeImageModal) {
+            closeImageModal.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeImageModalFunc();
+            });
+        }
+        
+        imageModal.addEventListener('click', function(e) {
+            if (e.target === imageModal) {
+                closeImageModalFunc();
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && imageModal.style.display === 'flex') {
+                closeImageModalFunc();
+            }
+        });
+    }
 
-// Call the function
-fixMobileVideoPlayback();
+    setupImageGallery();
+
+    // ===================== FIX VIDEO PLAYBACK ON MOBILE =====================
+    function fixMobileVideoPlayback() {
+        const videos = document.querySelectorAll('video');
+        
+        videos.forEach(video => {
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+            video.setAttribute('preload', 'metadata');
+            
+            if (!video.hasAttribute('controls')) {
+                video.setAttribute('controls', 'true');
+            }
+        });
+    }
+
+    fixMobileVideoPlayback();
 });
