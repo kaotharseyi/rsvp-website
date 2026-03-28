@@ -1,6 +1,6 @@
-// ===================== ENVELOPE ANIMATION =====================
-// ===================== ENVELOPE ANIMATION =====================
+// ===================== MAIN INITIALIZATION =====================
 document.addEventListener('DOMContentLoaded', function() {
+    // ===================== ENVELOPE ANIMATION =====================
     const envelopeWrapper = document.getElementById('envelope-wrapper');
     const mainContent = document.getElementById('main-content');
 
@@ -49,40 +49,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
-    // ===================== NAVIGATION & HAMBURGER MENU =====================
+    // ===================== NAVIGATION & HAMBURGER MENU (FIXED) =====================
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
+    // Debug: Check if elements exist
+    console.log('Hamburger element:', hamburger);
+    console.log('NavMenu element:', navMenu);
 
+    if (hamburger && navMenu) {
+        // Remove any existing event listeners by cloning and replacing (clean slate)
+        const newHamburger = hamburger.cloneNode(true);
+        hamburger.parentNode.replaceChild(newHamburger, hamburger);
+        const newNavMenu = navMenu.cloneNode(true);
+        navMenu.parentNode.replaceChild(newNavMenu, navMenu);
+        
+        // Get fresh references
+        const freshHamburger = document.getElementById('hamburger');
+        const freshNavMenu = document.getElementById('navMenu');
+        const freshNavLinks = document.querySelectorAll('.nav-link');
+        
+        // Toggle menu when clicking hamburger
+        freshHamburger.addEventListener('click', function(event) {
+            event.stopPropagation();
+            console.log('Hamburger clicked'); // Debug log
+            freshNavMenu.classList.toggle('active');
+            freshHamburger.classList.toggle('active');
+        });
+        
         // Close menu when clicking a link
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
+        freshNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                freshNavMenu.classList.remove('active');
+                freshHamburger.classList.remove('active');
             });
         });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (freshHamburger && freshNavMenu) {
+                if (!freshHamburger.contains(event.target) && !freshNavMenu.contains(event.target)) {
+                    freshNavMenu.classList.remove('active');
+                    freshHamburger.classList.remove('active');
+                }
+            }
+        });
+    } else {
+        console.error('Hamburger or NavMenu not found!');
     }
 
-    // SIMPLE HAMBURGER MENU
-const menuBtn = document.getElementById('hamburger');
-const menuList = document.getElementById('navMenu');
-
-if (menuBtn && menuList) {
-    menuBtn.onclick = function() {
-        if (menuList.classList.contains('active')) {
-            menuList.classList.remove('active');
-        } else {
-            menuList.classList.add('active');
-        }
-    };
-}
     // ===================== ADD TO CALENDAR FUNCTION =====================
     window.addToCalendar = function() {
         const event = {
@@ -97,19 +113,19 @@ if (menuBtn && menuList) {
         const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}&dates=${event.start.replace(/[-:]/g, '').replace('T', 'T')}/${event.end.replace(/[-:]/g, '').replace('T', 'T')}`;
         
         // Create iCal data for download (as fallback)
-                    const icalData = `BEGIN:VCALENDAR
-            VERSION:2.0
-            PRODID:-//Y&O Wedding//EN
-            BEGIN:VEVENT
-            UID:${Date.now()}@yandowedding.com
-            DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-            DTSTART:20260405T120000Z
-            DTEND:20260405T180000Z
-            SUMMARY:${event.title}
-            DESCRIPTION:${event.description}
-            LOCATION:${event.location}
-            END:VEVENT
-            END:VCALENDAR`;
+        const icalData = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Y&O Wedding//EN
+BEGIN:VEVENT
+UID:${Date.now()}@yandowedding.com
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:20260405T120000Z
+DTEND:20260405T180000Z
+SUMMARY:${event.title}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+END:VEVENT
+END:VCALENDAR`;
 
         // Try to open Google Calendar in a new window
         const googleWindow = window.open(googleCalendarUrl, '_blank');
@@ -211,7 +227,7 @@ if (menuBtn && menuList) {
                 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzOHjuRZYxj0diGF2FEf2oh9fefAgwCEKu_CeVMMpaL5NWMNdqnYSbX_HIxvbNPeO6rXg/exec';
                 
                 // Send data to Apps Script
-                const response = await fetch(APPS_SCRIPT_URL, {
+                await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors', // This prevents CORS issues
                     headers: {
@@ -277,7 +293,7 @@ if (menuBtn && menuList) {
 
     // ===================== SMOOTH SCROLL FOR NAVIGATION =====================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
@@ -288,22 +304,4 @@ if (menuBtn && menuList) {
             }
         });
     });
-
-    // ===================== SMOOTH SCROLL FOR NAVIGATION =====================
-document.querySelectorAll('.nav-link').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href && href.startsWith('#')) {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
-    });
 });
-});
-// ===================== HAMBURGER MENU FIX =====================
