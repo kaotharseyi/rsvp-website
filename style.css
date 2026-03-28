@@ -660,9 +660,120 @@ body {
     display: none;
 }
 
+/* Video Gallery Styles */
+.video-thumbnail {
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 300px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
 
-/* Responsive for mobile */
+.video-thumbnail:hover {
+    transform: scale(1.02);
+}
+
+.video-thumbnail video {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(196, 160, 82, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.video-thumbnail:hover .play-button {
+    background: var(--rich-gold);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Video Modal */
+.video-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    background: black;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: default;
+}
+
+.close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.close-modal:hover {
+    color: var(--rich-gold);
+}
+
+#modalVideo {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
+    .video-thumbnail {
+        max-width: 200px;
+    }
+    
+    .play-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .close-modal {
+        top: -35px;
+        font-size: 30px;
+    }
+    
+    .video-modal-content {
+        width: 95%;
+    }
+
     .gallery-grid {
         gap: 15px;
     }
@@ -674,6 +785,16 @@ body {
 }
 
 @media (max-width: 480px) {
+    .video-thumbnail {
+        max-width: 150px;
+    }
+    
+    .play-button {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
     .gallery-grid {
         gap: 10px;
     }
@@ -682,6 +803,15 @@ body {
     .gallery-grid video{
         max-width: 150px;
     }
+}
+
+/* Responsive for mobile */
+@media (max-width: 768px) {
+    
+}
+
+@media (max-width: 480px) {
+    
 }
 
 /* ===================== CONTACT SECTION ===================== */

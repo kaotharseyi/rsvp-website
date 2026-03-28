@@ -304,4 +304,141 @@ END:VCALENDAR`;
             }
         });
     });
+
+    // ===================== VIDEO GALLERY MODAL =====================
+function setupVideoGallery() {
+    const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const closeModal = document.querySelector('.close-modal');
+    
+    if (!videoThumbnails.length) return;
+    
+    // Function to ensure video plays on mobile
+    function ensureVideoPlays(videoElement) {
+        // For mobile devices, we need to ensure the video has the correct attributes
+        videoElement.setAttribute('playsinline', '');
+        videoElement.setAttribute('webkit-playsinline', '');
+        
+        // Load the video
+        videoElement.load();
+        
+        // Play with a small delay (helps with mobile browsers)
+        setTimeout(() => {
+            const playPromise = videoElement.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log('Auto-play prevented:', error);
+                    // Show play button if auto-play fails
+                    const controls = videoElement.controls;
+                    if (!controls) {
+                        videoElement.controls = true;
+                    }
+                });
+            }
+        }, 100);
+    }
+    
+    // Add click event to each video thumbnail
+    videoThumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            const videoSrc = this.getAttribute('data-video-src');
+            
+            if (modal && modalVideo) {
+                // Set the video source
+                modalVideo.src = videoSrc;
+                
+                // Add necessary attributes for mobile
+                modalVideo.setAttribute('playsinline', '');
+                modalVideo.setAttribute('webkit-playsinline', '');
+                modalVideo.setAttribute('controls', 'true');
+                
+                // Show modal
+                modal.style.display = 'flex';
+                
+                // Load and play the video
+                modalVideo.load();
+                
+                // Small delay to ensure modal is visible before playing
+                setTimeout(() => {
+                    const playPromise = modalVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('Playback failed:', error);
+                            // Video will still show with controls
+                        });
+                    }
+                }, 100);
+            }
+        });
+    });
+    
+    // Close modal when clicking X
+    if (closeModal) {
+        closeModal.addEventListener('click', function() {
+            if (modalVideo) {
+                modalVideo.pause();
+                modalVideo.src = '';
+            }
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+    
+    // Close modal when clicking outside the video
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                if (modalVideo) {
+                    modalVideo.pause();
+                    modalVideo.src = '';
+                }
+                modal.style.display = 'none';
+            }
+        });
+    }
+}
+
+// Call the function
+setupVideoGallery();
+
+// ===================== FIX VIDEO PLAYBACK ON MOBILE =====================
+// This ensures videos with controls work properly on mobile
+function fixMobileVideoPlayback() {
+    const videos = document.querySelectorAll('video');
+    
+    videos.forEach(video => {
+        // Add playsinline attribute for mobile
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        
+        // Remove any existing controls and add them properly
+        if (!video.hasAttribute('controls') && video.id !== 'modalVideo') {
+            video.setAttribute('controls', 'true');
+        }
+        
+        // For videos that are not in modal, handle play on click
+        if (video.id !== 'modalVideo') {
+            video.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (this.paused) {
+                    const playPromise = this.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('Video play failed:', error);
+                            // If auto-play fails, ensure controls are visible
+                            this.controls = true;
+                        });
+                    }
+                } else {
+                    this.pause();
+                }
+            });
+        }
+    });
+}
+
+// Call the function
+fixMobileVideoPlayback();
 });
