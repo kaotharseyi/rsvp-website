@@ -403,38 +403,19 @@ function setupVideoGallery() {
 // Call the function
 setupVideoGallery();
 
-// ===================== FIX VIDEO PLAYBACK ON MOBILE =====================
-// This ensures videos with controls work properly on mobile
+// FIX VIDEO PLAYBACK ON MOBILE 
 function fixMobileVideoPlayback() {
     const videos = document.querySelectorAll('video');
     
     videos.forEach(video => {
-        // Add playsinline attribute for mobile
+        // Add playsinline attributes for mobile
         video.setAttribute('playsinline', '');
         video.setAttribute('webkit-playsinline', '');
+        video.setAttribute('preload', 'metadata');
         
-        // Remove any existing controls and add them properly
-        if (!video.hasAttribute('controls') && video.id !== 'modalVideo') {
+        // Ensure controls are visible
+        if (!video.hasAttribute('controls')) {
             video.setAttribute('controls', 'true');
-        }
-        
-        // For videos that are not in modal, handle play on click
-        if (video.id !== 'modalVideo') {
-            video.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (this.paused) {
-                    const playPromise = this.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            console.log('Video play failed:', error);
-                            // If auto-play fails, ensure controls are visible
-                            this.controls = true;
-                        });
-                    }
-                } else {
-                    this.pause();
-                }
-            });
         }
     });
 }
