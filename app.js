@@ -97,26 +97,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const event = {
             title: 'Yewande & Olaoluwa Wedding',
             description: 'Join us to celebrate the wedding of Yewande and Olaoluwa',
-            location: 'PE2 8FD, United Kingdom',
-            start: '2026-04-05T12:00:00',
-            end: '2026-04-05T18:00:00'
+            location: "O'BOLA TELECOMMUNICATIONS",
+            start: '2026-04-05T10:00:00',
+            end: '2026-04-05T21:00:00'
         };
 
         const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}&dates=${event.start.replace(/[-:]/g, '').replace('T', 'T')}/${event.end.replace(/[-:]/g, '').replace('T', 'T')}`;
-        
         const icalData = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Y&O Wedding//EN
-BEGIN:VEVENT
-UID:${Date.now()}@yandowedding.com
-DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART:20260405T120000Z
-DTEND:20260405T180000Z
-SUMMARY:${event.title}
-DESCRIPTION:${event.description}
-LOCATION:${event.location}
-END:VEVENT
-END:VCALENDAR`;
+        VERSION:2.0
+        PRODID:-//Y&O Wedding//EN
+        BEGIN:VEVENT
+        UID:${Date.now()}@yandowedding.com
+        DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+        DTSTART:20260405T100000Z
+        DTEND:20260405T210000Z
+        SUMMARY:${event.title}
+        DESCRIPTION:${event.description}
+        LOCATION:${event.location}
+        END:VEVENT
+        END:VCALENDAR`;
 
         const googleWindow = window.open(googleCalendarUrl, '_blank');
         
@@ -133,7 +132,7 @@ END:VCALENDAR`;
 
     // ===================== GET DIRECTIONS FUNCTION =====================
     window.getDirections = function() {
-        const destination = 'PE2 8FD, United Kingdom';
+        const destination = "O'BOLA TELECOMMUNICATIONS, Ogun sate, Nigeria";
         const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
         window.open(mapsUrl, '_blank');
     };
